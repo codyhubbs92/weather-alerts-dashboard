@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Active Weather Alerts</title>
+
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0;
+        background: #111111;
+        color: #ffffff;
+        font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .header {
+        background: #8f1111;
+        padding: 14px 18px;
+        font-size: 20px;
+        font-weight: bold;
+        letter-spacing: .5px;
+    }
+
+    .status {
+        padding: 8px 18px;
+        background: #1c1c1c;
+        color: #bbbbbb;
+        font-size: 12px;
+        border-bottom: 1px solid #333333;
+    }
+
+    .alerts {
+        padding: 10px;
+    }
+
+    .alert {
+        background: #202020;
+        border-left: 5px solid #777777;
+        margin-bottom: 8px;
+        padding: 10px 12px;
+        border-radius: 3px;
+    }
+
+    .alert.extreme {
+        border-left-color: #ff2222;
+    }
+
+    .alert.severe {
+        border-left-color: #ff7a00;
+    }
+
+    .alert.moderate {
+        border-left-color: #ffd000;
+    }
+
+    .alert.minor {
+        border-left-color: #55aaff;
+    }
+
+    .event {
+        font-size: 16px;
+        font-weight: bold;
+        margin-bottom: 4px;
+    }
+
+    .area {
+        font-size: 13px;
+        color: #dddddd;
+        margin-bottom: 4px;
+    }
+
+    .time {
+        font-size: 11px;
+        color: #999999;
+    }
+
+    .none {
+        padding: 20px;
+        text-align: center;
+        color: #bbbbbb;
+    }
+
+    .footer {
+        padding: 8px 18px;
+        font-size: 10px;
+        color: #777777;
+        text-align: right;
+    }
+</style>
+</head>
+
+<body>
+
+<div class="header">⚠ ACTIVE WEATHER ALERTS</div>
+
+<div class="status" id="status">
+    Loading current alerts...
+</div>
+
+<div class="alerts" id="alerts"></div>
+
+<div class="footer">
+    Data: National Weather Service / NOAA
+</div>
+
+<script>
+
+const API_URL =
+    "https://api.weather.gov/alerts/active?status=actual&region_type=land";
+
+function severityRank(severity) {
+    const ranks = {
+        "Extreme": 1,
+        "Severe": 2,
+        "Moderate": 3,
+        "Minor": 4,
+        "Unknown": 5
+    };
+
+    return ranks[severity] || 5;
+}
+
+function formatTime(dateString) {
+    if (!dateString) return "";
+
+    const date = new Date(dateString);
+
+    return date.toLocaleString([], {
+        month: "short",
+        day: "numeric",
+        hour: "numeric",
+        minute: "2-digit"
+    });
+}
+
+function shortenArea(area) {
+    if (!area) return "United States";
+
+    const parts = area.split(";");
+
+    if (parts.length <= 3) {
+        return parts.join(", ");
+    }
+
+    return parts.slice(0, 3).join(", ") +
+           " +" + (parts.length - 3) + " more";
+}
+
+async function loadAlerts() {
+
+    const status = document.getElementById("status");
+    const alertsContainer = document.getElementById("alerts");
+
+    try {
+
+        const response = await fetch(API_URL, {
+            headers: {
+                "Accept": "application/geo+json"
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error("Weather service unavailable");
+        }
+
+        const data = await response.json();
+
+        const alerts = data.features || [];
+
+        alerts.sort((a, b) => {
+
+            const severityA =
+                severityRank(a.properties.severity);
+
+            const severityB =
+                severityRank(b.properties.severity);
+
+            if (severityA !== severityB) {
+                return severityA - severityB;
+            }
+
+            return new Date(a.properties.expires || 0) -
+                   new Date(b.properties.expires || 0);
+        });
+
+        alertsContainer.innerHTML = "";
+
+        if (alerts.length === 0) {
+
+            alertsContainer.innerHTML =
+                '<div class="none">✓ No active weather alerts</div>';
+
+        } else {
+
+            alerts.forEach(alert => {
+
+                const p = alert.properties;
+
+                const severity =
+                    (p.severity || "Unknown").toLowerCase();
+
+                const div = document.createElement("div");
+
+                div.className = "alert " + severity;
+
+                div.innerHTML = `
+                    <div class="event">
+                        ${p.event || "Weather Alert"}
+                    </div>
+
+                    <div class="area">
+                        ${shortenArea(p.areaDesc)}
+                    </div>
+
+                    <div class="time">
+                        Expires: ${formatTime(p.expires)}
+                    </div>
+                `;
+
+                alertsContainer.appendChild(div);
+
+            });
+        }
+
+        status.textContent =
+            `${alerts.length} active alert${alerts.length === 1 ? "" : "s"} • Updated ${formatTime(new Date())}`;
+
+    } catch (error) {
+
+        status.textContent =
+            "Unable to load weather alerts right now.";
+
+        alertsContainer.innerHTML =
+            '<div class="none">Weather alert service temporarily unavailable.</div>';
+    }
+}
+
+loadAlerts();
+
+setInterval(loadAlerts, 30000);
+
+</script>
+
+</body>
+</html>

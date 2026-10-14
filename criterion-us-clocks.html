@@ -1,30 +1,35 @@
-<!doctype html>
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
     :root {
       color-scheme: dark;
       --bg: #151719;
       --panel: #202326;
-      --panel-2: #191c1e;
+      --panel2: #191c1e;
       --text: #f5f5f5;
       --muted: #aeb4b8;
       --red: #d71920;
       --line: #3a3e42;
     }
-    * { box-sizing: border-box; }
+
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       margin: 0;
-      padding: 14px;
+      padding: 8px;
       background: transparent;
       color: var(--text);
       font-family: "Segoe UI", Arial, sans-serif;
     }
+
     .dashboard {
       width: 100%;
-      max-width: 1100px;
       margin: 0 auto;
       border: 1px solid var(--line);
       border-top: 4px solid var(--red);
@@ -33,168 +38,197 @@
       background: var(--bg);
       box-shadow: 0 8px 24px rgba(0,0,0,.18);
     }
-    .header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      padding: 16px 18px 13px;
-      border-bottom: 1px solid var(--line);
-      background: linear-gradient(120deg, #202326, #17191b);
-    }
-    .eyebrow {
-      margin: 0 0 4px;
-      color: #ff5a60;
-      font-size: 11px;
-      font-weight: 800;
-      letter-spacing: .16em;
-      text-transform: uppercase;
-    }
-    h1 {
-      margin: 0;
-      font-size: clamp(18px, 3vw, 24px);
-      line-height: 1.15;
-      letter-spacing: .01em;
-    }
-    .live {
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      color: #d7dbde;
-      font-size: 12px;
-      white-space: nowrap;
-    }
-    .dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: #45c477;
-      box-shadow: 0 0 9px rgba(69,196,119,.55);
-    }
+
     .grid {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 10px;
       padding: 12px;
     }
+
     .clock {
       min-width: 0;
-      padding: 14px 14px 13px;
+      padding: 14px;
       border: 1px solid var(--line);
       border-radius: 7px;
-      background: linear-gradient(145deg, var(--panel), var(--panel-2));
+      background: linear-gradient(145deg, var(--panel), var(--panel2));
       position: relative;
     }
-    .clock:before {
+
+    .clock::before {
       content: "";
       position: absolute;
-      top: 0; left: 0; bottom: 0;
+      top: 0;
+      left: 0;
+      bottom: 0;
       width: 3px;
       background: var(--red);
-      border-radius: 7px 0 0 7px;
     }
+
     .zone {
-      margin: 0 0 3px;
+      margin: 0 0 4px;
       color: #fff;
       font-size: 14px;
       font-weight: 750;
     }
+
     .city {
       margin: 0 0 12px;
       color: var(--muted);
       font-size: 12px;
     }
+
     .time {
-      font-size: clamp(22px, 3.5vw, 32px);
+      font-size: clamp(21px, 3vw, 32px);
       font-weight: 750;
       font-variant-numeric: tabular-nums;
       letter-spacing: -.035em;
-      line-height: 1.05;
+      line-height: 1.15;
       white-space: nowrap;
     }
+
     .date {
       margin-top: 7px;
       color: #c7ccd0;
       font-size: 12px;
     }
+
     .footer {
       display: flex;
       justify-content: space-between;
-      gap: 10px;
+      flex-wrap: wrap;
+      gap: 8px;
       padding: 10px 16px;
       border-top: 1px solid var(--line);
       color: var(--muted);
       font-size: 11px;
       background: #17191b;
     }
+
     @media (max-width: 650px) {
-      body { padding: 6px; }
-      .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 7px; padding: 8px; }
-      .clock { padding: 12px 10px 11px; }
-      .header { padding: 13px 12px; }
-      .footer { padding: 9px 12px; flex-direction: column; }
+      body {
+        padding: 4px;
+      }
+
+      .grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 7px;
+        padding: 8px;
+      }
+
+      .clock {
+        padding: 12px 10px;
+      }
+
+      .time {
+        font-size: clamp(19px, 4vw, 27px);
+      }
+
+      .footer {
+        flex-direction: column;
+      }
     }
+
     @media (max-width: 360px) {
-      .grid { grid-template-columns: 1fr; }
-      .time { font-size: 30px; }
+      .grid {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
+
 <body>
+  <main class="dashboard">
     <section class="grid" id="clocks">
+
       <article class="clock" data-zone="America/New_York">
-        <p class="zone">Eastern Time</p><p class="city">New York · Miami · Atlanta</p>
-        <div class="time">--:--:--</div><div class="date">Loading local time…</div>
+        <p class="zone">Eastern Time</p>
+        <p class="city">New York · Miami · Atlanta</p>
+        <div class="time">--:--:--</div>
+        <div class="date">Loading...</div>
       </article>
+
       <article class="clock" data-zone="America/Chicago">
-        <p class="zone">Central Time</p><p class="city">Springdale, AR · Chicago · Dallas</p>
-        <div class="time">--:--:--</div><div class="date">Loading local time…</div>
+        <p class="zone">Central Time</p>
+        <p class="city">Springdale, AR · Chicago · Dallas</p>
+        <div class="time">--:--:--</div>
+        <div class="date">Loading...</div>
       </article>
+
       <article class="clock" data-zone="America/Denver">
-        <p class="zone">Mountain Time</p><p class="city">Denver · Salt Lake City</p>
-        <div class="time">--:--:--</div><div class="date">Loading local time…</div>
+        <p class="zone">Mountain Time</p>
+        <p class="city">Denver · Salt Lake City</p>
+        <div class="time">--:--:--</div>
+        <div class="date">Loading...</div>
       </article>
+
       <article class="clock" data-zone="America/Los_Angeles">
-        <p class="zone">Pacific Time</p><p class="city">Los Angeles · Seattle · Portland</p>
-        <div class="time">--:--:--</div><div class="date">Loading local time…</div>
+        <p class="zone">Pacific Time</p>
+        <p class="city">Los Angeles · Seattle · Portland</p>
+        <div class="time">--:--:--</div>
+        <div class="date">Loading...</div>
       </article>
+
       <article class="clock" data-zone="America/Anchorage">
-        <p class="zone">Alaska Time</p><p class="city">Anchorage · Fairbanks</p>
-        <div class="time">--:--:--</div><div class="date">Loading local time…</div>
+        <p class="zone">Alaska Time</p>
+        <p class="city">Anchorage · Fairbanks</p>
+        <div class="time">--:--:--</div>
+        <div class="date">Loading...</div>
       </article>
+
       <article class="clock" data-zone="Pacific/Honolulu">
-        <p class="zone">Hawaii Time</p><p class="city">Honolulu</p>
-        <div class="time">--:--:--</div><div class="date">Loading local time…</div>
+        <p class="zone">Hawaii Time</p>
+        <p class="city">Honolulu</p>
+        <div class="time">--:--:--</div>
+        <div class="date">Loading...</div>
       </article>
+
     </section>
+
     <footer class="footer">
       <span>Times update automatically · Daylight saving time handled by each region</span>
-      <span id="updated">Updating…</span>
+      <span id="updated">Updating...</span>
     </footer>
   </main>
+
   <script>
-    const cards = [...document.querySelectorAll(".clock")];
-    const timeFormat = new Intl.DateTimeFormat("en-US", {
-      hour: "numeric", minute: "2-digit", second: "2-digit",
-      hour12: true
-    });
+    const cards = document.querySelectorAll(".clock");
+
     function updateClocks() {
       const now = new Date();
+
       cards.forEach(card => {
         const zone = card.dataset.zone;
-        card.querySelector(".time").textContent = timeFormat.format(now).replace(/\\s/g, " ");
-        // Format each time in its own time zone.
-        card.querySelector(".time").textContent = new Intl.DateTimeFormat("en-US", {
-          timeZone: zone, hour: "numeric", minute: "2-digit", second: "2-digit", hour12: true
-        }).format(now);
-        card.querySelector(".date").textContent = new Intl.DateTimeFormat("en-US", {
-          timeZone: zone, weekday: "short", month: "short", day: "numeric", year: "numeric"
-        }).format(now);
+
+        card.querySelector(".time").textContent =
+          new Intl.DateTimeFormat("en-US", {
+            timeZone: zone,
+            hour: "numeric",
+            minute: "2-digit",
+            second: "2-digit",
+            hour12: true
+          }).format(now);
+
+        card.querySelector(".date").textContent =
+          new Intl.DateTimeFormat("en-US", {
+            timeZone: zone,
+            weekday: "short",
+            month: "short",
+            day: "numeric",
+            year: "numeric"
+          }).format(now);
       });
-      document.getElementById("updated").textContent = "Updated " + new Intl.DateTimeFormat("en-US", {
-        hour: "numeric", minute: "2-digit", second: "2-digit", hour12: true
-      }).format(now);
+
+      document.getElementById("updated").textContent =
+        "Updated " +
+        new Intl.DateTimeFormat("en-US", {
+          hour: "numeric",
+          minute: "2-digit",
+          second: "2-digit",
+          hour12: true
+        }).format(now);
     }
+
     updateClocks();
     setInterval(updateClocks, 1000);
   </script>

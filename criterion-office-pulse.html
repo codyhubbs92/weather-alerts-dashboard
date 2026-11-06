@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Criterion | Office Pulse</title>
+<style>
+  :root {
+    --bg: #111315;
+    --panel: #1b1e21;
+    --panel2: #202428;
+    --line: #343a40;
+    --text: #f4f5f6;
+    --muted: #aab1b8;
+    --red: #c83232;
+    --red2: #ef4b4b;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 18px;
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Segoe UI", Arial, sans-serif;
+  }
+  .wrap { max-width: 1250px; margin: 0 auto; }
+  .masthead {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 16px; border-bottom: 3px solid var(--red); padding: 5px 2px 15px;
+    margin-bottom: 15px;
+  }
+  .brand { display:flex; align-items:center; gap:12px; }
+  .mark { width: 9px; height: 42px; background: var(--red); }
+  .eyebrow { color: var(--red2); font-size: 10px; font-weight: 800; letter-spacing: 2.5px; }
+  h1 { margin: 2px 0 0; font-size: clamp(23px, 3vw, 34px); letter-spacing: 1.5px; font-weight: 800; }
+  .date { color: var(--muted); font-size: 12px; text-align: right; line-height: 1.6; }
+  .ticker-shell { background: #171a1d; border: 1px solid var(--line); border-radius: 7px; overflow: hidden; margin-bottom: 18px; }
+  .section-label {
+    display:flex; align-items:center; gap:9px; color:#fff; font-size:12px;
+    font-weight:800; letter-spacing:1.4px; margin:0 0 12px;
+  }
+  .section-label:before { content:""; width:4px; height:16px; background:var(--red); display:inline-block; }
+  .ticker-title { padding: 10px 13px 0; color: var(--muted); font-size: 10px; letter-spacing: 1.5px; font-weight: 800; }
+  .tradingview-widget-container { width:100%; min-height:52px; }
+  .grid { display:grid; grid-template-columns: 1fr 1fr; gap:18px; }
+  .panel {
+    background: var(--panel); border:1px solid var(--line); border-radius:8px;
+    padding:16px; min-height:300px;
+  }
+  .panel-head { display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:14px; }
+  .tag { font-size:9px; color:#f1b5b5; border:1px solid #713333; background:#321e20; padding:4px 7px; border-radius:3px; letter-spacing:1px; white-space:nowrap; }
+  .stories { display:flex; flex-direction:column; gap:0; }
+  .story { padding:12px 0; border-top:1px solid var(--line); }
+  .story:first-child { border-top:0; padding-top:0; }
+  .story a { color:var(--text); text-decoration:none; font-size:14px; line-height:1.45; font-weight:650; }
+  .story a:hover { color:#ff7777; }
+  .meta { color:var(--muted); font-size:10px; margin-top:5px; }
+  .status { color:var(--muted); font-size:11px; padding:10px 0; }
+  .footer { color:#747c84; font-size:10px; text-align:right; margin-top:13px; }
+  .footer a { color:#aab1b8; }
+  @media (max-width:760px) {
+    body { padding:12px; }
+    .grid { grid-template-columns:1fr; }
+    .date { font-size:10px; }
+    .panel { min-height:unset; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="masthead">
+    <div class="brand">
+      <div class="mark"></div>
+      <div>
+        <div class="eyebrow">CRITERION ENERGY</div>
+        <h1>OFFICE PULSE</h1>
+      </div>
+    </div>
+    <div class="date">
+      <div id="today"></div>
+      <div>NEWS • MARKETS • NORTHWEST ARKANSAS</div>
+    </div>
+  </header>
+
+  <section class="ticker-shell">
+    <div class="ticker-title">MARKET WATCH</div>
+    <div class="tradingview-widget-container">
+      <div class="tradingview-widget-container__widget"></div>
+      <div class="tradingview-widget-copyright"></div>
+      <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
+      {
+        "symbols": [
+          {"proName":"FOREXCOM:SPXUSD","title":"S&P 500"},
+          {"proName":"FOREXCOM:NSXUSD","title":"NASDAQ 100"},
+          {"proName":"FOREXCOM:DJI","title":"DOW"},
+          {"proName":"TVC:GOLD","title":"GOLD"},
+          {"proName":"NYMEX:CL1!","title":"CRUDE OIL"},
+          {"proName":"BITSTAMP:BTCUSD","title":"BITCOIN"}
+        ],
+        "showSymbolLogo": false,
+        "isTransparent": true,
+        "displayMode": "adaptive",
+        "colorTheme": "dark",
+        "locale": "en"
+      }
+      </script>
+    </div>
+  </section>
+
+  <main class="grid">
+    <section class="panel">
+      <div class="panel-head">
+        <h2 class="section-label">TOP NATIONAL NEWS</h2>
+        <span class="tag">UNITED STATES</span>
+      </div>
+      <div id="national" class="stories"><div class="status">Loading the latest national headlines…</div></div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <h2 class="section-label">NORTHWEST ARKANSAS</h2>
+        <span class="tag">LOCAL NEWS</span>
+      </div>
+      <div id="local" class="stories"><div class="status">Loading Northwest Arkansas headlines…</div></div>
+    </section>
+  </main>
+
+  <div class="footer">
+    Market data provided by <a href="https://www.tradingview.com/" target="_blank" rel="noopener">TradingView</a> ·
+    Headlines via Google News RSS · External links open at their source
+  </div>
+</div>
+
+<script>
+  const today = new Date();
+  document.getElementById("today").textContent = today.toLocaleDateString("en-US", {
+    weekday:"long", month:"long", day:"numeric", year:"numeric"
+  });
+
+  const feeds = {
+    national: "https://news.google.com/rss/headlines/section/topic/NATION?hl=en-US&gl=US&ceid=US:en",
+    local: "https://news.google.com/rss/search?q=Northwest+Arkansas+OR+Fayetteville+Arkansas+OR+Springdale+Arkansas&hl=en-US&gl=US&ceid=US:en"
+  };
+
+  function cleanText(value) {
+    const el = document.createElement("div");
+    el.innerHTML = value || "";
+    return (el.textContent || "").trim();
+  }
+
+  async function loadFeed(targetId, feedUrl, fallbackUrl) {
+    const target = document.getElementById(targetId);
+    try {
+      const endpoint = "https://api.rss2json.com/v1/api.json?count=6&rss_url=" + encodeURIComponent(feedUrl);
+      const response = await fetch(endpoint);
+      if (!response.ok) throw new Error("Feed request failed");
+      const data = await response.json();
+      if (data.status !== "ok" || !data.items || !data.items.length) throw new Error("No stories returned");
+
+      target.innerHTML = "";
+      data.items.slice(0, 6).forEach(item => {
+        const row = document.createElement("article");
+        row.className = "story";
+        const link = document.createElement("a");
+        link.href = item.link;
+        link.target = "_blank";
+        link.rel = "noopener";
+        link.textContent = cleanText(item.title);
+        const meta = document.createElement("div");
+        meta.className = "meta";
+        const source = cleanText(item.author || item.source || "Google News");
+        const date = item.pubDate ? new Date(item.pubDate).toLocaleDateString("en-US", {month:"short", day:"numeric"}) : "";
+        meta.textContent = [source, date].filter(Boolean).join(" · ");
+        row.appendChild(link);
+        row.appendChild(meta);
+        target.appendChild(row);
+      });
+    } catch (error) {
+      target.innerHTML = "";
+      const message = document.createElement("div");
+      message.className = "status";
+      message.textContent = "Headlines couldn't load in this view. Open the live feed instead:";
+      const link = document.createElement("a");
+      link.href = fallbackUrl;
+      link.target = "_blank";
+      link.rel = "noopener";
+      link.style.color = "#ff7777";
+      link.textContent = "View latest headlines";
+      target.appendChild(message);
+      target.appendChild(link);
+    }
+  }
+
+  loadFeed("national", feeds.national, "https://news.google.com/");
+  loadFeed("local", feeds.local, "https://news.google.com/search?q=Northwest+Arkansas");
+  // Refresh headlines every 15 minutes while the page remains open.
+  setInterval(() => {
+    loadFeed("national", feeds.national, "https://news.google.com/");
+    loadFeed("local", feeds.local, "https://news.google.com/search?q=Northwest+Arkansas");
+  }, 15 * 60 * 1000);
+</script>
+</body>
+</html>
